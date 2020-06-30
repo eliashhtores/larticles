@@ -1,0 +1,65 @@
+// Create project
+$ composer create-project --prefer-dist laravel/laravel <projectName>
+
+// Create articles table
+$ php artisan make:migration create_<tablename>_table --create=tablename*
+
+// Open migration file and add fields to table
+
+// Open file app\Providers\AppServiceProvider.php and add
+use Illuminate\Support\Facades\Schema;
+// Then add this to boot() function
+Schema::defaultStringLength(191);
+
+// Create seeds to fill database tables
+$ php artisan make:seeder <TableName*>TableSeeder
+
+// Open file related to the table in database/seeds/ and add to the run() function:
+factory(App\<TableName>::class, 30)->create();
+
+// Open database/seeds/DatabaseSeeder.php and add to the run() function:
+$this->call(<TableName*>TableSeeder::class);
+
+// Create factory by running:
+$ php artisan make:factory <TableName>Factory
+
+// Under database/factories open <TableName>.php and update this:
+$factory->define(App\<TableName>::class, function (Faker $faker) {
+    return [
+        'title' => $faker->text(50),
+        'body' => $faker->text(200)
+    ];
+});
+
+// Create model
+$ php artisan make:model <TableName>
+
+// Create tables
+$ php artisan migrate
+
+// Seed tables:
+$ php artisan db:seed
+
+// Create controller
+$ php artisan make:controller <TableName>Controller --resource
+// File will be in app\Http\Controllers\<TableName>Controller.php
+
+// Open routes\api.php and add routes, for a list:
+Route::get('<tablename* **>', '<TableName>Controller@index');
+// For a single one:
+Route::get('<tablename**>', '<TableName>Controller@show');
+
+// Create resource by running:
+$ php artisan make:resource <TableName>
+// File will be in:
+app\Http\Resources\<TableName>.php
+// The above file can be modified to change API responses
+
+// Change app\Http\Controllers\<TableName>Controller.php to return responses
+// Bring the following files
+use App\Http\Requests;
+use App\<TableName>;
+use App\Http\Resources\<TableName> as <TableName>Resource; 
+
+* Must be plural
+** Must be lowercase
